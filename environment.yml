@@ -26,3 +26,4 @@ dependencies:
       - jupyter==1.0.0
       - nbclient==0.10.0
       - papermill==2.6.0
+      - aiohttp

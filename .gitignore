@@ -31,7 +31,8 @@ data/processed/*
 mlruns/*
 !mlruns/.gitkeep
 mlartifacts/
-reports/
+reports/*
+!reports/*.gitkeep
 # Serialized models / preprocessors (root only — do not use models/ or src/models/ is excluded)
 /models/
 *.joblib

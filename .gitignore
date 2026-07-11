@@ -29,10 +29,8 @@ data/processed/*
 
 # MLflow local tracking
 mlruns/*
-!mlruns/.gitkeep
+!mlruns/.gitkeepf
 mlartifacts/
-reports/*
-!reports/*.gitkeep
 # Serialized models / preprocessors (root only — do not use models/ or src/models/ is excluded)
 /models/
 *.joblib

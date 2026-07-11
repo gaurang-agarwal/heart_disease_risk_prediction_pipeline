@@ -1,0 +1,51 @@
+# ---------------------------------------------------------------------------
+# Stage 1 — builder: install dependencies into a virtual environment
+# ---------------------------------------------------------------------------
+FROM python:3.11-slim AS builder
+
+WORKDIR /build
+
+# Install build tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN python -m venv /opt/venv \
+    && /opt/venv/bin/pip install --upgrade pip \
+    && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+# ---------------------------------------------------------------------------
+# Stage 2 — runtime: copy only what's needed
+# ---------------------------------------------------------------------------
+FROM python:3.11-slim AS runtime
+
+# Non-root user for security
+RUN useradd --create-home --shell /bin/bash appuser
+
+WORKDIR /app
+
+# Copy virtual environment from builder
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy source code
+COPY src/ ./src/
+COPY pyproject.toml .flake8 ./
+
+# Create directories that the app may need at runtime
+RUN mkdir -p /app/models /app/mlruns /app/data/raw /app/data/processed /app/screenshots \
+    && chown -R appuser:appuser /app
+
+COPY models/ /app/models
+ENV MODEL_BUNDLE_PATH=models/bundle.joblib  
+
+USER appuser
+
+EXPOSE 8000
+
+# Health check — validates /health before marking container healthy
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+
+CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

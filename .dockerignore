@@ -1,0 +1,50 @@
+# Version control
+.git
+.gitignore
+
+# Python caches
+__pycache__
+*.py[cod]
+*.pyo
+.pytest_cache
+.mypy_cache
+
+# Virtual environments
+.venv
+venv
+env
+
+# Data files (mount at runtime or bake separately)
+data/raw/
+data/processed/
+mlruns/
+
+# Test artefacts
+.coverage
+htmlcov/
+coverage.xml
+
+# Editor / OS
+.DS_Store
+*.swp
+*.swo
+.idea
+.vscode
+
+# Notebooks (not needed in API image)
+notebooks/
+
+# Documentation and reports
+reports/
+screenshots/
+*.pdf
+*.md
+
+# Conda
+*.conda
+*.lock
+
+# Build artefacts
+dist/
+build/
+*.egg-info/

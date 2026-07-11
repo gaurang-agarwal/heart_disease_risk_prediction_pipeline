@@ -1,0 +1,18 @@
+apiVersion: v2
+name: heart-disease
+description: >
+  Helm chart for the Heart Disease Risk Prediction FastAPI service.
+  Deploys the prediction API with liveness/readiness probes,
+  Prometheus scraping, and optional Ingress routing.
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - mlops
+  - fastapi
+  - machine-learning
+  - heart-disease
+home: https://github.com/bits-mlops/heart-disease-mlops
+maintainers:
+  - name: BITS MLOps Student
+    email: student@bits-pilani.ac.in

@@ -8,7 +8,9 @@ Run end-to-end from the command line::
     python -m src.models.train
 
 This reads ``data/raw/heart.csv``, trains LogisticRegression and RandomForest,
-logs both runs to MLflow, selects the best model by ROC-AUC, saves the best model at ``models/bundle.joblib``, registers it in ML flow model Registry at Staging, and prints a
+logs both runs to MLflow, selects the best model by ROC-AUC,
+saves the best model at ``models/bundle.joblib``,
+registers it in ML flow model Registry at Staging, and prints a
 comparison table.
 """
 

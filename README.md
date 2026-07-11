@@ -88,7 +88,7 @@ python -m src.models.train
 View MLflow experiments:
 
 ```bash
-mlflow ui --host 0.0.0.0 --port 5000 --default-artifact-root "${pwd}/mlruns" --backend-store-uri "sqlite:///${pwd}/mlruns/mlflow.db"
+mlflow ui --host 0.0.0.0 --port 5000 --default-artifact-root "$(pwd)/mlruns" --backend-store-uri "sqlite:///$(pwd)/mlruns/mlflow.db"
 # Open http://localhost:5000
 ```
 

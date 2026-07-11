@@ -119,6 +119,9 @@ jobs:
   docker-build:
     name: Docker Build & Smoke Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     needs: train
 
     steps:
@@ -164,40 +167,3 @@ jobs:
           docker tag heart-api:ci ghcr.io/${{ github.repository }}:${{ github.sha }}
           docker push ghcr.io/${{ github.repository }}:latest
           docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
-
-  # ---------------------------------------------------------------------------
-  # Job 5 — Deploy to Kubernetes (gated: main branch + manual trigger)
-  # ---------------------------------------------------------------------------
-  deploy:
-    name: Deploy (Helm → K8s)
-    runs-on: ubuntu-latest
-    needs: docker-build
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    environment: production
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v4
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v4
-
-      - name: Configure kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > ~/.kube/config
-
-      - name: Deploy with Helm
-        run: |
-          helm upgrade --install heart-disease k8s/helm/heart-disease \
-            --set image.tag=${{ github.sha }} \
-            --set image.repository=ghcr.io/${{ github.repository }} \
-            --wait --timeout 5m
-
-      - name: Verify rollout
-        run: kubectl rollout status deployment/heart-disease --timeout=5m
